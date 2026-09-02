@@ -13,6 +13,7 @@ export const profile = {
     linkedin: "https://www.linkedin.com/in/vevan-o-narain/",
     leetcode: "https://leetcode.com/u/Vevan05/",
   },
+  resume: "/Vevan_O_Narain_Resume.pdf",
   stats: [
     { value: "9.44", label: "CGPA" },
     { value: "200+", label: "LeetCode solved" },

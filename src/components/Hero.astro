@@ -31,6 +31,12 @@ import VoxelCluster from "./VoxelCluster.astro";
 
     <div class="hero-actions" data-reveal style="--reveal-delay: 340ms;">
       <a class="btn btn-primary" href="#projects">View projects</a>
+      <a class="btn btn-ghost btn-resume" href={profile.resume} download="Vevan_O_Narain_Resume.pdf" target="_blank" rel="noopener noreferrer">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-right:6px">
+          <path d="M12 3v13m0 0l-5-5m5 5l5-5M3 17v3a1 1 0 001 1h16a1 1 0 001-1v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Download Resume
+      </a>
       <a class="btn btn-ghost" href={`mailto:${profile.email}`}>{profile.email}</a>
     </div>
   </div>
@@ -278,6 +284,16 @@ import VoxelCluster from "./VoxelCluster.astro";
   .btn-ghost:hover {
     border-color: var(--teal);
     color: var(--text);
+  }
+
+  .btn-resume {
+    border-color: var(--gold-dim);
+    color: var(--gold);
+  }
+  .btn-resume:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #17130a;
   }
 </style>
 

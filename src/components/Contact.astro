@@ -31,6 +31,17 @@ const year = new Date().getFullYear();
     </div>
   </div>
 
+  <div class="resume-cta" data-reveal style="--reveal-delay: 180ms;">
+    <a class="btn-resume-cta mono" href={profile.resume} download="Vevan_O_Narain_Resume.pdf" target="_blank" rel="noopener noreferrer">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 3v13m0 0l-5-5m5 5l5-5M3 17v3a1 1 0 001 1h16a1 1 0 001-1v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Download Resume — PDF
+      <span class="cta-arrow">↗</span>
+    </a>
+    <span class="cta-hint mono">Vevan_O_Narain_Resume.pdf · updated 2026</span>
+  </div>
+
   <footer class="site-footer mono" data-reveal style="--reveal-delay: 200ms;">
     <span>© {year} {profile.name}</span>
     <span>built with Astro</span>
@@ -145,10 +156,39 @@ const year = new Date().getFullYear();
     display: none;
   }
 
+  .resume-cta {
+    margin-top: 20px;
+    max-width: 640px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn-resume-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1px solid var(--gold-dim);
+    border-radius: var(--radius);
+    background: rgba(217, 164, 65, 0.08);
+    color: var(--gold);
+    font-size: 13px;
+    transition: background 150ms ease, border-color 150ms ease, color 150ms ease, transform 150ms ease;
+  }
+  .btn-resume-cta:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #17130a;
+    transform: translateY(-1px);
+  }
+  .cta-arrow { font-size: 11px; opacity: 0.8; }
+  .cta-hint { font-size: 11px; color: var(--text-faint); }
+
   .site-footer {
     display: flex;
     justify-content: space-between;
-    margin-top: 64px;
+    margin-top: 32px;
     padding-top: 24px;
     border-top: 1px solid var(--border-soft);
     font-size: 11.5px;
@@ -214,10 +254,11 @@ const year = new Date().getFullYear();
             <span class="term-help-cmd">education</span><span>list education history</span>
             <span class="term-help-cmd">projects</span><span>list projects with links</span>
             <span class="term-help-cmd">contact</span><span>email, phone & social links</span>
+            <span class="term-help-cmd">resume</span><span>download resume PDF</span>
             <span class="term-help-cmd">clear</span><span>clear the terminal</span>
             <span class="term-help-cmd">whoami</span><span>print name</span>
           </div>
-          <div class="muted">Tip: use ↑/↓ for history, Tab hint not needed — just type.</div>
+          <div class="muted">Tip: use ↑/↓ for history — try <span class="gold">resume</span> to download.</div>
         `);
       },
       about: () => {
@@ -269,7 +310,12 @@ const year = new Date().getFullYear();
           <div>github: ${link(profile.links.github, profile.links.github)}</div>
           <div>linkedin: ${link(profile.links.linkedin, profile.links.linkedin)}</div>
           <div>leetcode: ${link(profile.links.leetcode, profile.links.leetcode)}</div>
+          <div style="margin-top:8px">resume: ${link(profile.resume, "Vevan_O_Narain_Resume.pdf")} <span class="muted">— download ↓</span></div>
         `);
+      },
+      resume: () => {
+        printOut(`<div>resume: ${link(profile.resume, "Vevan_O_Narain_Resume.pdf")} — <span class="gold">click to download ↓</span></div>`);
+        window.open(profile.resume, "_blank");
       },
       whoami: () => printOut(escapeHtml(profile.name)),
       clear: () => {
@@ -295,6 +341,9 @@ const year = new Date().getFullYear();
       clear: "clear",
       cls: "clear",
       whoami: "whoami",
+      resume: "resume",
+      cv: "resume",
+      download: "resume",
     };
 
     const run = (raw) => {
