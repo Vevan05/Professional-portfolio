@@ -8,7 +8,7 @@ export const profile = {
   email: "vevanonarain@gmail.com",
   phone: "+91-9811311028",
   links: {
-    portfolio: "https://portfolio-vevan.vercel.app",
+    portfolio: "https://vevan-portfolio.vercel.app",
     github: "https://github.com/Vevan05",
     linkedin: "https://www.linkedin.com/in/vevan-o-narain/",
     leetcode: "https://leetcode.com/u/Vevan05/",
