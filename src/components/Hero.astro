@@ -47,7 +47,13 @@ import VoxelCluster from "./VoxelCluster.astro";
 
   @media (max-width: 640px) {
     .hero {
-      padding: 64px 24px 64px;
+      padding: 72px 20px 56px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .hero {
+      padding: 64px 16px 48px;
     }
   }
 
@@ -127,37 +133,77 @@ import VoxelCluster from "./VoxelCluster.astro";
     }
   }
 
+  @media (max-width: 640px) {
+    .blob-a {
+      width: 420px;
+      height: 420px;
+      top: -160px;
+    }
+    .blob-b {
+      width: 360px;
+      height: 360px;
+      right: -120px;
+      bottom: -140px;
+    }
+    .grid-floor {
+      height: 38%;
+      background-size: 32px 32px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blob-a, .blob-b, .grid-floor { animation: none; }
+  }
+
   .hero-inner {
     position: relative;
     z-index: 1;
     max-width: 640px;
+    width: 100%;
+    min-width: 0;
   }
 
   .headline {
-    font-size: clamp(32px, 4.6vw, 50px);
+    font-size: clamp(26px, 7vw, 50px);
     line-height: 1.12;
-    margin: 0 0 24px;
+    margin: 0 0 20px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
   }
 
   .summary {
     color: var(--text-dim);
-    font-size: 16.5px;
+    font-size: clamp(14px, 3.5vw, 16.5px);
     max-width: 560px;
-    margin-bottom: 36px;
+    margin-bottom: 28px;
+    line-height: 1.65;
   }
 
   .stat-line {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 10px;
-    font-size: 13px;
+    gap: 8px 10px;
+    font-size: clamp(11px, 2.8vw, 13px);
     color: var(--text-dim);
-    padding: 14px 18px;
+    padding: 12px 14px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    margin-bottom: 32px;
+    margin-bottom: 28px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  @media (max-width: 400px) {
+    .stat-line {
+      gap: 6px 8px;
+      padding: 10px 12px;
+    }
+    .stat {
+      font-size: 11.5px;
+    }
   }
 
   .prompt {
@@ -176,17 +222,33 @@ import VoxelCluster from "./VoxelCluster.astro";
   .hero-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
+    width: 100%;
+  }
+
+  @media (max-width: 420px) {
+    .hero-actions {
+      flex-direction: column;
+    }
+    .hero-actions .btn {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+    }
   }
 
   .btn {
     display: inline-flex;
     align-items: center;
-    padding: 11px 20px;
+    justify-content: center;
+    padding: 11px 18px;
     border-radius: var(--radius);
     font-size: 14px;
     font-weight: 500;
+    min-height: 44px;
+    min-width: 0;
     transition: transform 150ms ease, border-color 150ms ease, background 150ms ease;
+    word-break: break-all;
   }
 
   .btn-primary {
@@ -201,7 +263,17 @@ import VoxelCluster from "./VoxelCluster.astro";
     border: 1px solid var(--border);
     color: var(--text-dim);
     font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: clamp(11px, 2.8vw, 13px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 420px) {
+    .btn-ghost {
+      white-space: normal;
+      word-break: break-all;
+    }
   }
   .btn-ghost:hover {
     border-color: var(--teal);

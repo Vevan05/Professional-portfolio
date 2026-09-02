@@ -110,6 +110,8 @@ const items = [
   </div>
 </nav>
 
+<div class="sidebar-backdrop" id="sidebar-backdrop" aria-hidden="true"></div>
+
 <button class="sb-reopen" id="sb-reopen" type="button" aria-label="Open sidebar" aria-expanded="false" aria-controls="sidebar-nav">
   <span class="mini-cube" aria-hidden="true">
     <span class="f top"></span><span class="f left"></span><span class="f right"></span>
@@ -483,6 +485,11 @@ const items = [
     }
   }
 
+  /* Mobile overlay backdrop */
+  .sidebar-backdrop {
+    display: none;
+  }
+
   @media (max-width: 900px) {
     .topbar {
       display: flex;
@@ -494,6 +501,9 @@ const items = [
       background: var(--bg-raise);
       border-bottom: 1px solid var(--border-soft);
       padding: 6px 16px;
+      padding-left: max(16px, env(safe-area-inset-left));
+      padding-right: max(16px, env(safe-area-inset-right));
+      width: 100%;
     }
 
     .topbar .mark {
@@ -503,14 +513,19 @@ const items = [
     .menu-toggle {
       background: none;
       border: none;
-      width: 36px;
-      height: 36px;
+      width: 44px;
+      height: 44px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 5px;
       cursor: pointer;
+      flex-shrink: 0;
+      border-radius: var(--radius);
+    }
+    .menu-toggle:active {
+      background: var(--surface);
     }
     .menu-toggle span {
       width: 20px;
@@ -520,15 +535,54 @@ const items = [
 
     .sidebar {
       transform: translateX(-100%);
-      transition: transform 220ms ease;
-      width: min(78vw, 300px);
+      transition: transform 260ms cubic-bezier(0.4,0,0.2,1);
+      width: min(82vw, 320px);
+      max-width: 320px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      padding-bottom: env(safe-area-inset-bottom);
+      z-index: 40;
     }
     .sidebar.open {
       transform: translateX(0);
+      box-shadow: 16px 0 48px rgba(0,0,0,0.5);
+    }
+
+    .sidebar-backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      z-index: 39;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 220ms ease, visibility 0s linear 220ms;
+    }
+    .sidebar-backdrop.open {
+      pointer-events: auto;
+    }
+    .sidebar-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 220ms ease;
     }
 
     .mark--desktop {
       display: none;
+    }
+
+    .tree-item, .link-item {
+      min-height: 44px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .sidebar {
+      width: 88vw;
     }
   }
 </style>
@@ -536,16 +590,33 @@ const items = [
 <script>
   const toggle = document.getElementById("menu-toggle");
   const nav = document.getElementById("sidebar-nav");
+  const backdrop = document.getElementById("sidebar-backdrop");
+  const setMobileOpen = (shouldOpen) => {
+    if (!nav) return;
+    nav.classList.toggle("open", shouldOpen);
+    if (backdrop) {
+      backdrop.classList.toggle("open", shouldOpen);
+      backdrop.setAttribute("aria-hidden", String(!shouldOpen));
+    }
+    if (toggle) toggle.setAttribute("aria-expanded", String(!!shouldOpen));
+    // lock scroll only on html to avoid black bar from scrollbar gutter
+    document.documentElement.style.overflow = shouldOpen ? "hidden" : "";
+    document.body.style.overflow = shouldOpen ? "hidden" : "";
+  };
   toggle?.addEventListener("click", () => {
-    const open = nav?.classList.toggle("open");
-    toggle.setAttribute("aria-expanded", String(!!open));
+    const willOpen = !nav?.classList.contains("open");
+    setMobileOpen(willOpen);
   });
+  backdrop?.addEventListener("click", () => setMobileOpen(false));
   nav?.querySelectorAll("a").forEach((a) =>
     a.addEventListener("click", () => {
-      nav.classList.remove("open");
-      toggle?.setAttribute("aria-expanded", "false");
+      setMobileOpen(false);
     })
   );
+  // close on resize to desktop
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 900) setMobileOpen(false);
+  });
 
   const SB_KEY = "portfolio:sb";
   const root = document.documentElement;

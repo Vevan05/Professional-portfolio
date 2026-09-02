@@ -93,6 +93,12 @@ const edgePath = (n: LayerNode) => {
     min-height: 640px;
   }
 
+  .layer-fallback {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+  }
+
   @media (max-width: 900px) {
     .graph-wrap {
       display: none;
@@ -100,12 +106,6 @@ const edgePath = (n: LayerNode) => {
     .layer-fallback {
       display: flex;
     }
-  }
-
-  .layer-fallback {
-    display: none;
-    flex-direction: column;
-    gap: 10px;
   }
 
   .graph-svg {
@@ -258,6 +258,12 @@ const edgePath = (n: LayerNode) => {
     .graph-wrap + * {
       margin-top: 0;
     }
+  }
+
+  @media (max-width: 380px) {
+    .fallback-card { padding: 12px 12px; }
+    .layer-head { gap: 6px; margin-bottom: 8px; }
+    .item { font-size: 10.5px; padding: 3px 6px; }
   }
 </style>
 

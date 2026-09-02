@@ -75,7 +75,21 @@ import { education, certifications, profile } from "../data/resume";
     .entry {
       grid-template-columns: 1fr;
       gap: 6px;
+      padding: 0 0 24px 20px;
     }
+  }
+
+  @media (max-width: 380px) {
+    .timeline {
+      margin-left: 2px;
+      margin-bottom: 40px;
+    }
+    .entry {
+      padding: 0 0 20px 16px;
+    }
+    .entry-title { font-size: 15px; }
+    .entry-place { font-size: 13px; }
+    .certs li { font-size: 13px; padding-left: 14px; }
   }
 
   .entry::before {

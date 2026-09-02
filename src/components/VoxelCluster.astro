@@ -120,8 +120,10 @@
 
   function boot(reduced: boolean, sceneEl: HTMLElement, mount: HTMLElement) {
     const SEED = 20260823;
-    const GRID = 11;
-    const STEP = 1.16;
+    const isMobile = window.innerWidth < 640;
+    const isTiny = window.innerWidth < 380;
+    const GRID = isTiny ? 7 : isMobile ? 9 : 11;
+    const STEP = isTiny ? 1.08 : 1.16;
 
     const rand = mulberry32(SEED);
 
@@ -193,8 +195,9 @@
       }
     }
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+    const renderer = new THREE.WebGLRenderer({ antialias: !isMobile && !isCoarse, alpha: true, powerPreference: isMobile ? "low-power" : "high-performance" });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 2));
     renderer.setClearColor(0x000000, 0);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.05;
@@ -413,14 +416,16 @@
       renderOnce();
     } else {
       window.addEventListener("scroll", recalcScroll, { passive: true });
-      window.addEventListener(
-        "pointermove",
-        (e) => {
-          nx = (e.clientX / window.innerWidth) * 2 - 1;
-          ny = (e.clientY / window.innerHeight) * 2 - 1;
-        },
-        { passive: true }
-      );
+      if (!isMobile && !isCoarse) {
+        window.addEventListener(
+          "pointermove",
+          (e) => {
+            nx = (e.clientX / window.innerWidth) * 2 - 1;
+            ny = (e.clientY / window.innerHeight) * 2 - 1;
+          },
+          { passive: true }
+        );
+      }
 
       new IntersectionObserver((entries) => {
         const entry = entries[0];

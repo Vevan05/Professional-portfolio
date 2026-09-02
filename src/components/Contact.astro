@@ -104,9 +104,10 @@ const year = new Date().getFullYear();
   :global(.term-line) { margin: 2px 0; word-break: break-word; }
   :global(.term-line .prompt) { color: var(--teal); }
   :global(.term-out) { color: var(--text-dim); padding-left: 2px; margin: 1px 0 6px; }
-  :global(.term-out a) { color: var(--gold); text-decoration: none; }
+  :global(.term-out) { overflow-wrap: break-word; word-break: break-word; }
+  :global(.term-out a) { color: var(--gold); text-decoration: none; word-break: break-all; }
   :global(.term-out a:hover) { text-decoration: underline; }
-  :global(.term-help-grid) { display: grid; grid-template-columns: 140px 1fr; gap: 2px 16px; margin: 6px 0; }
+  :global(.term-help-grid) { display: grid; grid-template-columns: 140px 1fr; gap: 2px 16px; margin: 6px 0; word-break: break-word; }
   :global(.term-help-cmd) { color: var(--gold); }
   :global(.term-edu) { margin: 6px 0 10px; padding-left: 14px; border-left: 1px solid var(--border); }
   :global(.term-proj) { margin: 8px 0; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-2); }
@@ -134,6 +135,12 @@ const year = new Date().getFullYear();
     min-width: 0;
   }
 
+  @media (max-width: 640px) {
+    #terminal-input {
+      font-size: 16px; /* prevent iOS zoom */
+    }
+  }
+
   .cursor {
     display: none;
   }
@@ -150,8 +157,19 @@ const year = new Date().getFullYear();
   }
 
   @media (max-width: 640px) {
-    .terminal-body { min-height: 280px; max-height: 380px; padding: 16px 14px 12px; }
-    :global(.term-help-grid) { grid-template-columns: 110px 1fr; }
+    .terminal-body { min-height: 260px; max-height: min(58vh, 380px); padding: 14px 12px 10px; font-size: 12.5px; }
+    :global(.term-help-grid) { grid-template-columns: 110px 1fr; gap: 4px 10px; }
+    :global(.term-proj) { padding: 8px 10px; }
+    :global(.term-proj ul) { margin-left: 12px !important; }
+    .terminal { border-radius: 8px; }
+    .site-footer { flex-direction: column; gap: 6px; align-items: flex-start; }
+  }
+
+  @media (max-width: 380px) {
+    .terminal-body { min-height: 240px; padding: 12px 10px 8px; font-size: 12px; }
+    :global(.term-help-grid) { grid-template-columns: 1fr; }
+    :global(.term-help-grid span:nth-child(even)) { margin-bottom: 6px; padding-left: 8px; color: var(--text-dim); }
+    :global(.term-edu) { padding-left: 10px; }
   }
 </style>
 
