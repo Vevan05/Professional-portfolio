@@ -1,0 +1,28 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Sidebar from "../components/Sidebar.astro";
+import Hero from "../components/Hero.astro";
+import Projects from "../components/Projects.astro";
+import Skills from "../components/Skills.astro";
+import Education from "../components/Education.astro";
+import Contact from "../components/Contact.astro";
+import { profile } from "../data/resume";
+---
+
+<BaseLayout
+  title={`${profile.name} — Portfolio`}
+  description={profile.summary}
+>
+  <div class="shell">
+    <Sidebar />
+    <div class="content">
+      <main>
+        <Hero />
+        <Projects />
+        <Skills />
+        <Education />
+        <Contact />
+      </main>
+    </div>
+  </div>
+</BaseLayout>

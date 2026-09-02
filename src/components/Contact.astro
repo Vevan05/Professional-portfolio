@@ -1,0 +1,344 @@
+---
+import { profile, education, projects } from "../data/resume";
+
+const year = new Date().getFullYear();
+---
+
+<section id="contact" class="section contact">
+  <p class="eyebrow" data-reveal>contact.sh</p>
+  <h2 class="section-title" data-reveal style="--reveal-delay: 70ms;">Let's build something.</h2>
+
+  <div class="terminal" data-reveal style="--reveal-delay: 140ms;" id="terminal">
+    <div class="terminal-bar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="terminal-title mono">contact.sh — bash</span>
+    </div>
+    <div class="terminal-body mono" id="terminal-body">
+      <div id="terminal-output"></div>
+      <div class="input-line">
+        <span class="prompt">$</span>
+        <input
+          id="terminal-input"
+          type="text"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+          aria-label="Terminal input"
+        />
+        <span class="cursor" aria-hidden="true"></span>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer mono" data-reveal style="--reveal-delay: 200ms;">
+    <span>© {year} {profile.name}</span>
+    <span>built with Astro</span>
+  </footer>
+</section>
+
+<style>
+  .contact {
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .terminal {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    max-width: 640px;
+    box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+  }
+  .dot.r { background: #6b4646; }
+  .dot.y { background: var(--gold-dim); }
+  .dot.g { background: var(--teal-dim); }
+
+  .terminal-title {
+    margin-left: 6px;
+    font-size: 11.5px;
+    color: var(--text-faint);
+  }
+
+  .terminal-body {
+    background: var(--surface);
+    padding: 18px 20px 14px;
+    font-size: 13px;
+    line-height: 1.7;
+    min-height: 320px;
+    max-height: 420px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+    cursor: text;
+  }
+
+  .terminal-body::-webkit-scrollbar { width: 6px; }
+  .terminal-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
+
+  .prompt { color: var(--teal); margin-right: 8px; }
+  .cmd { color: var(--text); }
+  .out { color: var(--text-dim); }
+  .muted { color: var(--text-faint); }
+  .gold { color: var(--gold); }
+  .teal { color: var(--teal); }
+
+  :global(.term-line) { margin: 2px 0; word-break: break-word; }
+  :global(.term-line .prompt) { color: var(--teal); }
+  :global(.term-out) { color: var(--text-dim); padding-left: 2px; margin: 1px 0 6px; }
+  :global(.term-out a) { color: var(--gold); text-decoration: none; }
+  :global(.term-out a:hover) { text-decoration: underline; }
+  :global(.term-help-grid) { display: grid; grid-template-columns: 140px 1fr; gap: 2px 16px; margin: 6px 0; }
+  :global(.term-help-cmd) { color: var(--gold); }
+  :global(.term-edu) { margin: 6px 0 10px; padding-left: 14px; border-left: 1px solid var(--border); }
+  :global(.term-proj) { margin: 8px 0; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-2); }
+  :global(.term-proj a) { color: var(--gold); }
+  :global(.term-proj .stack) { color: var(--text-faint); font-size: 11.5px; margin-top: 4px; }
+
+  .input-line {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-top: 8px;
+    padding-top: 4px;
+  }
+
+  #terminal-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    caret-color: var(--gold);
+    min-width: 0;
+  }
+
+  .cursor {
+    display: none;
+  }
+
+  .site-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-soft);
+    font-size: 11.5px;
+    color: var(--text-faint);
+    max-width: 640px;
+  }
+
+  @media (max-width: 640px) {
+    .terminal-body { min-height: 280px; max-height: 380px; padding: 16px 14px 12px; }
+    :global(.term-help-grid) { grid-template-columns: 110px 1fr; }
+  }
+</style>
+
+<script define:vars={{ profile, education, projects }}>
+  const terminal = document.getElementById("terminal");
+  const body = document.getElementById("terminal-body");
+  const output = document.getElementById("terminal-output");
+  const input = document.getElementById("terminal-input");
+
+  if (terminal && body && output && input) {
+    const history = [];
+    let hIndex = -1;
+
+    const escapeHtml = (s) =>
+      s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+
+    const link = (href, text) =>
+      `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(text)}</a>`;
+
+    const append = (html) => {
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = html;
+      while (wrapper.firstChild) output.appendChild(wrapper.firstChild);
+      body.scrollTop = body.scrollHeight;
+    };
+
+    const printLine = (cmd) => {
+      append(`<div class="term-line"><span class="prompt">$</span> <span class="cmd">${escapeHtml(cmd)}</span></div>`);
+    };
+
+    const printOut = (html) => {
+      append(`<div class="term-out">${html}</div>`);
+    };
+
+    const commands = {
+      help: () => {
+        printOut(`
+          <div class="muted">Available commands — type & press enter:</div>
+          <div class="term-help-grid">
+            <span class="term-help-cmd">help</span><span>show this help</span>
+            <span class="term-help-cmd">about</span><span>who I am — bio & focus</span>
+            <span class="term-help-cmd">education</span><span>list education history</span>
+            <span class="term-help-cmd">projects</span><span>list projects with links</span>
+            <span class="term-help-cmd">contact</span><span>email, phone & social links</span>
+            <span class="term-help-cmd">clear</span><span>clear the terminal</span>
+            <span class="term-help-cmd">whoami</span><span>print name</span>
+          </div>
+          <div class="muted">Tip: use ↑/↓ for history, Tab hint not needed — just type.</div>
+        `);
+      },
+      about: () => {
+        printOut(`
+          <div><span class="gold">${escapeHtml(profile.name)}</span> — <span class="teal">${escapeHtml(profile.role)}</span></div>
+          <div style="margin-top:6px">${escapeHtml(profile.tagline)}</div>
+          <div style="margin-top:8px" class="out">${escapeHtml(profile.summary)}</div>
+          <div style="margin-top:8px" class="muted">
+            ${profile.stats.map((s) => `<span class="gold">${escapeHtml(s.value)}</span> ${escapeHtml(s.label)}`).join(" · ")}
+          </div>
+        `);
+      },
+      education: () => {
+        const html = education
+          .map(
+            (e) => `
+              <div class="term-edu">
+                <div class="gold">${escapeHtml(e.period)} — ${escapeHtml(e.title)}</div>
+                <div>${escapeHtml(e.place)}</div>
+                <div class="teal">${escapeHtml(e.detail)}</div>
+              </div>
+            `
+          )
+          .join("");
+        printOut(html);
+      },
+      projects: () => {
+        const html = projects
+          .map(
+            (p) => `
+              <div class="term-proj">
+                <div><span class="gold">${escapeHtml(p.name)}</span> <span class="muted">— ${escapeHtml(p.tagline)}</span> <span class="teal" style="font-size:11px">[${escapeHtml(p.status)}]</span></div>
+                <div class="stack">${p.stack.map((s) => escapeHtml(s)).join(" · ")}</div>
+                <ul style="margin:6px 0 0 16px; padding:0; color:var(--text-dim)">
+                  ${p.bullets.map((b) => `<li>${escapeHtml(b)}</li>`).join("")}
+                </ul>
+                <div style="margin-top:6px">${link(p.href, p.href.replace("https://",""))} → ${link(p.href, p.name + " ↗")}</div>
+              </div>
+            `
+          )
+          .join("");
+        printOut(html);
+      },
+      contact: () => {
+        printOut(`
+          <div>email: ${link("mailto:" + profile.email, profile.email)}</div>
+          <div>phone: ${escapeHtml(profile.phone)}</div>
+          <div style="margin-top:6px">portfolio: ${link(profile.links.portfolio, profile.links.portfolio)}</div>
+          <div>github: ${link(profile.links.github, profile.links.github)}</div>
+          <div>linkedin: ${link(profile.links.linkedin, profile.links.linkedin)}</div>
+          <div>leetcode: ${link(profile.links.leetcode, profile.links.leetcode)}</div>
+        `);
+      },
+      whoami: () => printOut(escapeHtml(profile.name)),
+      clear: () => {
+        output.innerHTML = "";
+        return true;
+      },
+    };
+
+    const aliases = {
+      edu: "education",
+      "edu.": "education",
+      proj: "projects",
+      project: "projects",
+      ls: "projects",
+      "ls projects": "projects",
+      contact: "contact",
+      contacts: "contact",
+      about: "about",
+      info: "about",
+      help: "help",
+      h: "help",
+      "?": "help",
+      clear: "clear",
+      cls: "clear",
+      whoami: "whoami",
+    };
+
+    const run = (raw) => {
+      const cmd = raw.trim();
+      if (!cmd) return;
+      printLine(cmd);
+      const key = cmd.toLowerCase();
+      const resolved = aliases[key] || key;
+      const fn = commands[resolved];
+      if (fn) {
+        const isClear = fn();
+        if (!isClear) body.scrollTop = body.scrollHeight;
+      } else {
+        printOut(`<span class="muted">command not found:</span> ${escapeHtml(cmd)} — type <span class="gold">help</span> for available commands.`);
+      }
+    };
+
+    // initial banner
+    printOut(`<div class="muted">Welcome — ${escapeHtml(profile.name)}'s portfolio shell.</div><div>Type <span class="gold">help</span> to see commands. Try <span class="gold">about</span>, <span class="gold">projects</span>, <span class="gold">education</span>, <span class="gold">contact</span>.</div>`);
+    commands.help();
+
+    const focusInput = () => input.focus();
+    terminal.addEventListener("click", focusInput);
+    body.addEventListener("click", focusInput);
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const val = input.value;
+        if (val.trim()) {
+          history.unshift(val);
+          if (history.length > 50) history.pop();
+        }
+        hIndex = -1;
+        run(val);
+        input.value = "";
+      } else if (e.key === "ArrowUp") {
+        if (!history.length) return;
+        e.preventDefault();
+        hIndex = Math.min(hIndex + 1, history.length - 1);
+        input.value = history[hIndex] ?? "";
+        requestAnimationFrame(() => input.setSelectionRange(input.value.length, input.value.length));
+      } else if (e.key === "ArrowDown") {
+        if (hIndex === -1) return;
+        e.preventDefault();
+        hIndex -= 1;
+        input.value = hIndex >= 0 ? history[hIndex] : "";
+      } else if (e.key === "l" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        commands.clear();
+      }
+    });
+
+    // autofocus when visible
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((en) => en.isIntersecting)) {
+          focusInput();
+          io.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    io.observe(terminal);
+  }
+</script>

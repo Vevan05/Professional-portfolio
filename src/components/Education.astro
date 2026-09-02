@@ -1,0 +1,182 @@
+---
+import { education, certifications, profile } from "../data/resume";
+---
+
+<section id="education" class="section">
+  <p class="eyebrow" data-reveal>education.md</p>
+  <h2 class="section-title" data-reveal style="--reveal-delay: 70ms;">Record.</h2>
+
+  <div class="timeline">
+    {
+      education.map((e, i) => (
+        <div class="entry" data-reveal style={`--reveal-delay: ${i * 80}ms;`}>
+          <div class="entry-period mono">{e.period}</div>
+          <div class="entry-body">
+            <h3 class="entry-title">{e.title}</h3>
+            <p class="entry-place">{e.place}</p>
+            <p class="entry-detail mono">{e.detail}</p>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="certs" data-reveal>
+    <p class="certs-label mono">certifications & achievements</p>
+    <ul>
+      {
+        certifications.map((c) => (
+          <li>
+            {c.href ? (
+              <a class="cert-name cert-link" href={c.href} target="_blank" rel="noopener noreferrer">
+                {c.name}<span class="cert-arrow"> ↗</span>
+              </a>
+            ) : (
+              <span class="cert-name">{c.name}</span>
+            )}
+            <span class="cert-issuer"> — {c.issuer}</span>
+            {c.scoreReport && (
+              <>
+                <span class="cert-sep"> · </span>
+                <a class="cert-link muted-link" href={c.scoreReport} target="_blank" rel="noopener noreferrer">
+                  Score Report<span class="cert-arrow"> ↗</span>
+                </a>
+              </>
+            )}
+          </li>
+        ))
+      }
+      <li>
+        <a class="cert-name cert-link" href={profile.links.leetcode} target="_blank" rel="noopener noreferrer">
+          200+ problems solved on LeetCode<span class="cert-arrow"> ↗</span>
+        </a>
+        <span class="cert-issuer"> — sharpening DSA fluency and problem-solving speed.</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .timeline {
+    border-left: 1px solid var(--border);
+    margin-left: 4px;
+    margin-bottom: 56px;
+  }
+
+  .entry {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 24px;
+    padding: 0 0 32px 28px;
+    position: relative;
+  }
+
+  @media (max-width: 640px) {
+    .entry {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+  }
+
+  .entry::before {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: 4px;
+    width: 9px;
+    height: 9px;
+    background: var(--bg);
+    border: 1.5px solid var(--gold-dim);
+    border-radius: 1px;
+    transform: rotate(45deg);
+  }
+
+  .entry-period {
+    font-size: 12.5px;
+    color: var(--text-faint);
+    padding-top: 2px;
+  }
+
+  .entry-title {
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
+  .entry-place {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  .entry-detail {
+    font-size: 12px;
+    color: var(--teal);
+  }
+
+  .certs-label {
+    font-size: 11.5px;
+    color: var(--text-faint);
+    letter-spacing: 0.03em;
+    margin-bottom: 14px;
+  }
+
+  .certs ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .certs li {
+    font-size: 14px;
+    color: var(--text-dim);
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .certs li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 5px;
+    height: 5px;
+    background: var(--teal);
+    border-radius: 50%;
+  }
+
+  .cert-name {
+    color: var(--text);
+  }
+
+  .cert-link {
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 150ms ease, border-color 150ms ease;
+  }
+  .cert-link:hover {
+    color: var(--gold);
+    border-bottom-color: var(--gold-dim);
+  }
+  .cert-arrow {
+    color: var(--text-faint);
+    font-size: 11px;
+  }
+  .cert-link:hover .cert-arrow {
+    color: var(--gold);
+  }
+  .muted-link {
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+  .cert-sep {
+    color: var(--text-faint);
+  }
+
+  .cert-issuer {
+    color: var(--text-faint);
+  }
+</style>

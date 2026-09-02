@@ -1,0 +1,104 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="booting">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script is:inline>
+      document.documentElement.classList.add("js");
+      try {
+        if (localStorage.getItem("portfolio:sb") === "closed") {
+          document.documentElement.classList.add("sb-closed");
+        }
+      } catch {}
+    </script>
+    <noscript>
+      <style>
+        .boot-screen {
+          display: none;
+        }
+        html.booting body {
+          overflow: auto !important;
+        }
+      </style>
+    </noscript>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="boot-screen" aria-hidden="true">
+      <div class="boot-inner">
+        <span class="boot-cube">
+          <span class="f top"></span><span class="f left"></span><span class="f right"></span>
+        </span>
+        <p class="boot-text mono">~/portfolio</p>
+        <div class="boot-bar"><span></span></div>
+        <p class="boot-sub mono">assembling voxels…</p>
+      </div>
+    </div>
+
+    <div class="bg-glow" aria-hidden="true"></div>
+    <slot />
+
+    <script is:inline>
+      (function () {
+        var start = Date.now();
+        var done = false;
+        var finish = function () {
+          if (done) return;
+          done = true;
+          var wait = Math.max(0, 800 - (Date.now() - start));
+          setTimeout(function () {
+            document.documentElement.classList.remove("booting");
+            setTimeout(function () {
+              var el = document.querySelector(".boot-screen");
+              if (el) el.remove();
+            }, 700);
+          }, wait);
+        };
+        window.addEventListener("load", finish);
+        setTimeout(finish, 3500);
+      })();
+    </script>
+
+    <script>
+      const els = document.querySelectorAll("[data-reveal]");
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (reduced || !("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("is-revealed"));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-revealed");
+                io.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12, rootMargin: "0px 0px -48px 0px" }
+        );
+        els.forEach((el) => io.observe(el));
+      }
+    </script>
+  </body>
+</html>

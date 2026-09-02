@@ -1,0 +1,237 @@
+---
+import { profile } from "../data/resume";
+import VoxelCluster from "./VoxelCluster.astro";
+---
+
+<section id="about" class="hero">
+  <div class="aurora" aria-hidden="true">
+    <span class="blob blob-a"></span>
+    <span class="blob blob-b"></span>
+  </div>
+  <div class="grid-floor" aria-hidden="true"></div>
+  <VoxelCluster />
+  <div class="hero-inner">
+    <p class="eyebrow" data-reveal>{profile.role}</p>
+    <h1 class="headline" data-reveal style="--reveal-delay: 80ms;">{profile.tagline}</h1>
+    <p class="summary" data-reveal style="--reveal-delay: 160ms;">{profile.summary}</p>
+
+    <div class="stat-line mono" data-reveal style="--reveal-delay: 260ms;">
+      <span class="prompt">$</span>
+      {
+        profile.stats.map((s, i) => (
+          <>
+            <span class="stat">
+              <span class="stat-value" data-count={s.value}>{s.value}</span> {s.label}
+            </span>
+            {i < profile.stats.length - 1 && <span class="sep">·</span>}
+          </>
+        ))
+      }
+    </div>
+
+    <div class="hero-actions" data-reveal style="--reveal-delay: 340ms;">
+      <a class="btn btn-primary" href="#projects">View projects</a>
+      <a class="btn btn-ghost" href={`mailto:${profile.email}`}>{profile.email}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding: 128px 56px 96px;
+    overflow: hidden;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  @media (max-width: 640px) {
+    .hero {
+      padding: 64px 24px 64px;
+    }
+  }
+
+  .aurora {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+  }
+
+  .blob-a {
+    width: 640px;
+    height: 640px;
+    left: 50%;
+    top: -240px;
+    background: radial-gradient(circle, rgba(217, 164, 65, 0.09), transparent 62%);
+    animation: drift-a 26s ease-in-out infinite alternate;
+  }
+
+  .blob-b {
+    width: 560px;
+    height: 560px;
+    right: -180px;
+    bottom: -220px;
+    background: radial-gradient(circle, rgba(90, 168, 157, 0.07), transparent 62%);
+    animation: drift-b 32s ease-in-out infinite alternate;
+  }
+
+  @keyframes drift-a {
+    to {
+      transform: translate(-70px, 44px) scale(1.12);
+    }
+  }
+
+  @keyframes drift-b {
+    to {
+      transform: translate(52px, -38px) scale(0.92);
+    }
+  }
+
+  .grid-floor {
+    position: absolute;
+    left: -15%;
+    right: -15%;
+    bottom: -14%;
+    height: 48%;
+    background-image:
+      linear-gradient(rgba(154, 160, 171, 0.13) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(154, 160, 171, 0.13) 1px, transparent 1px);
+    background-size: 42px 42px;
+    transform: perspective(520px) rotateX(60deg);
+    transform-origin: center top;
+    -webkit-mask-image: linear-gradient(to top, black 4%, transparent 82%);
+    mask-image: linear-gradient(to top, black 4%, transparent 82%);
+    animation: floor-drift 8s linear infinite;
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  @keyframes floor-drift {
+    to {
+      background-position-y: 84px;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .aurora {
+      opacity: 0.7;
+    }
+    .grid-floor {
+      opacity: 0.35;
+    }
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+  }
+
+  .headline {
+    font-size: clamp(32px, 4.6vw, 50px);
+    line-height: 1.12;
+    margin: 0 0 24px;
+  }
+
+  .summary {
+    color: var(--text-dim);
+    font-size: 16.5px;
+    max-width: 560px;
+    margin-bottom: 36px;
+  }
+
+  .stat-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-dim);
+    padding: 14px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+  }
+
+  .prompt {
+    color: var(--gold);
+  }
+
+  .stat-value {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .sep {
+    color: var(--text-faint);
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 11px 20px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 500;
+    transition: transform 150ms ease, border-color 150ms ease, background 150ms ease;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: #17130a;
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  .btn-ghost:hover {
+    border-color: var(--teal);
+    color: var(--text);
+  }
+</style>
+
+<script>
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const values = document.querySelectorAll<HTMLElement>(".stat-value[data-count]");
+
+  if (!reduced && values.length) {
+    const animate = (el: HTMLElement) => {
+      const raw = el.dataset.count ?? "";
+      const match = raw.match(/^(\d+(?:\.\d+)?)(.*)$/);
+      if (!match) return;
+      const target = parseFloat(match[1]);
+      const decimals = (match[1].split(".")[1] ?? "").length;
+      const suffix = match[2];
+      const duration = 1300;
+      const start = performance.now();
+      const tick = (now: number) => {
+        const t = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = (target * eased).toFixed(decimals) + suffix;
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+
+    setTimeout(() => values.forEach(animate), 420);
+  }
+</script>

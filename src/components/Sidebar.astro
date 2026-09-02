@@ -1,0 +1,626 @@
+---
+import { profile } from "../data/resume";
+
+const items = [
+  { href: "#about", file: "about.tsx" },
+  { href: "#projects", file: "projects/" },
+  { href: "#stack", file: "stack.json" },
+  { href: "#education", file: "education.md" },
+  { href: "#contact", file: "contact.sh" },
+];
+---
+
+<header class="topbar">
+  <a class="mark" href="#about" aria-label="Home">
+    <span class="mark-cube">
+      <span class="f top"></span><span class="f left"></span><span class="f right"></span>
+    </span>
+    <span class="mark-text mono">{profile.initials}</span>
+  </a>
+  <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="sidebar-nav">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<nav class="sidebar" id="sidebar-nav">
+  <a class="mark mark--desktop" href="#about" aria-label="Home">
+    <span class="mark-cube">
+      <span class="f top"></span><span class="f left"></span><span class="f right"></span>
+    </span>
+    <div>
+      <div class="mark-text mono">{profile.initials}</div>
+      <div class="mark-sub mono">v1.0.0</div>
+    </div>
+  </a>
+
+  <div class="tree">
+    <p class="tree-label mono">~/portfolio</p>
+    <span class="tree-indicator" aria-hidden="true"></span>
+    <ul>
+      {
+        items.map((item) => (
+          <li>
+            <a href={item.href} class="tree-item mono" data-section={item.href.slice(1)}>
+              <span class="bracket">└─</span>
+              {item.file}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <button class="sb-toggle" id="sb-toggle" type="button" aria-label="Collapse sidebar" aria-expanded="true" aria-controls="sidebar-nav">
+    <svg viewBox="0 0 12 12" width="11" height="11" fill="none" aria-hidden="true">
+      <path d="M8 2 L4.5 6 L8 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+  </button>
+
+  <div class="side-block">
+    <p class="tree-label mono">~/links</p>
+    <ul class="link-list">
+      <li>
+        <a class="link-item mono" href={profile.links.portfolio} target="_blank" rel="noopener noreferrer">
+          portfolio<span class="arrow">↗</span>
+        </a>
+      </li>
+      <li>
+        <a class="link-item mono" href={profile.links.github} target="_blank" rel="noopener noreferrer">
+          github<span class="arrow">↗</span>
+        </a>
+      </li>
+      <li>
+        <a class="link-item mono" href={profile.links.linkedin} target="_blank" rel="noopener noreferrer">
+          linkedin<span class="arrow">↗</span>
+        </a>
+      </li>
+      <li>
+        <a class="link-item mono" href={profile.links.leetcode} target="_blank" rel="noopener noreferrer">
+          leetcode<span class="arrow">↗</span>
+        </a>
+      </li>
+      <li>
+        <a class="link-item mono" href={`mailto:${profile.email}`}>
+          email<span class="arrow">↗</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="status-panel">
+    <p class="tree-label mono">~/status</p>
+    <div class="panel-box mono">
+      <div class="row">
+        <span class="k">state</span>
+        <span class="v"><span class="dot"></span>open to SDE internships</span>
+      </div>
+      <div class="row">
+        <span class="k">loc</span>
+        <span class="v">Vellore, IN</span>
+      </div>
+      <div class="row">
+        <span class="k">time</span>
+        <span class="v" id="ist-clock">--:--:-- IST</span>
+      </div>
+      <div class="row">
+        <span class="k">focus</span>
+        <span class="v">systems · ml</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<button class="sb-reopen" id="sb-reopen" type="button" aria-label="Open sidebar" aria-expanded="false" aria-controls="sidebar-nav">
+  <span class="mini-cube" aria-hidden="true">
+    <span class="f top"></span><span class="f left"></span><span class="f right"></span>
+  </span>
+  <span class="reopen-label mono">menu</span>
+</button>
+
+<style>
+  .topbar {
+    display: none;
+  }
+
+  .mark {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 28px 24px 20px;
+  }
+
+  .mark--desktop {
+    display: flex;
+  }
+
+  .mark-cube {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    transform: translateY(3px);
+  }
+
+  .mark-cube .f {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+  }
+  .mark-cube .top {
+    background: var(--gold);
+    transform: rotate(30deg) skewX(-30deg) scaleY(0.864);
+    top: -9.5px;
+  }
+  .mark-cube .left {
+    background: var(--gold-dim);
+    transform: skewY(-30deg);
+    top: 0.5px;
+  }
+  .mark-cube .right {
+    background: #4a3a1e;
+    transform: scaleX(-1) skewY(-30deg);
+    top: 0.5px;
+  }
+
+  .mark-text {
+    font-size: 14px;
+    color: var(--text);
+    letter-spacing: 0.02em;
+  }
+
+  .mark-sub {
+    font-size: 10.5px;
+    color: var(--text-faint);
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: var(--sidebar-w);
+    border-right: 1px solid var(--border-soft);
+    background: var(--bg-raise);
+    display: flex;
+    flex-direction: column;
+    z-index: 20;
+  }
+
+  .sb-toggle {
+    position: absolute;
+    top: 30px;
+    right: -13px;
+    width: 26px;
+    height: 26px;
+    display: none;
+    place-items: center;
+    background: var(--bg-raise);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    color: var(--text-dim);
+    cursor: pointer;
+    z-index: 25;
+    transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
+  }
+
+  .sb-toggle:hover {
+    color: var(--gold);
+    border-color: var(--gold-dim);
+    background: var(--surface);
+  }
+
+  .sb-toggle svg {
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  :global(html.sb-closed) .sb-toggle svg {
+    transform: rotate(180deg);
+  }
+
+  .sb-reopen {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 45;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px;
+    background: var(--bg-raise);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition:
+      opacity 240ms ease 140ms,
+      transform 240ms ease 140ms,
+      border-color 150ms ease,
+      background 150ms ease,
+      visibility 0s linear 400ms;
+  }
+
+  .sb-reopen:hover {
+    border-color: var(--gold-dim);
+    background: var(--surface);
+  }
+
+  :global(html.sb-closed) .sb-reopen {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+    transition:
+      opacity 240ms ease 140ms,
+      transform 240ms ease 140ms,
+      border-color 150ms ease,
+      background 150ms ease,
+      visibility 0s;
+  }
+
+  .reopen-label {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .sb-reopen:hover .reopen-label {
+    color: var(--text);
+  }
+
+  .mini-cube {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    transform: translateY(-2px);
+    flex-shrink: 0;
+  }
+
+  .mini-cube .f {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+  }
+  .mini-cube .top {
+    background: var(--gold);
+    transform: rotate(30deg) skewX(-30deg) scaleY(0.864);
+    top: -7px;
+  }
+  .mini-cube .left {
+    background: var(--gold-dim);
+    transform: skewY(-30deg);
+    top: 0.5px;
+  }
+  .mini-cube .right {
+    background: #4a3a1e;
+    transform: scaleX(-1) skewY(-30deg);
+    top: 0.5px;
+  }
+
+  @media (min-width: 901px) {
+    .sidebar {
+      transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html.sb-closed .sidebar {
+      transform: translateX(-102%);
+    }
+
+    .sb-toggle {
+      display: grid;
+    }
+
+    .sb-reopen {
+      display: flex;
+    }
+  }
+
+  .tree {
+    padding: 8px 24px;
+    flex: 1;
+    position: relative;
+  }
+
+  .tree-indicator {
+    position: absolute;
+    left: 24px;
+    top: 0;
+    width: 2px;
+    border-radius: 2px;
+    background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    opacity: 0;
+    transition:
+      transform 320ms cubic-bezier(0.4, 0, 0.2, 1),
+      height 320ms cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 200ms ease;
+    pointer-events: none;
+  }
+
+  .tree-label {
+    font-size: 11px;
+    color: var(--text-faint);
+    margin: 0 0 10px;
+    letter-spacing: 0.03em;
+  }
+
+  .tree ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .tree-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-dim);
+    padding: 7px 8px;
+    border-radius: var(--radius);
+    transition: color 150ms ease, background 150ms ease;
+  }
+
+  .bracket {
+    color: var(--text-faint);
+  }
+
+  .tree-item:hover {
+    color: var(--text);
+    background: var(--surface-2);
+  }
+
+  .tree-item.active {
+    color: var(--gold);
+  }
+  .tree-item.active .bracket {
+    color: var(--gold-dim);
+  }
+
+  .side-block {
+    padding: 8px 24px;
+  }
+
+  .side-block .tree-label {
+    margin-bottom: 10px;
+  }
+
+  .link-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .link-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-dim);
+    padding: 7px 8px;
+    border-radius: var(--radius);
+    transition: color 150ms ease, background 150ms ease;
+  }
+
+  .arrow {
+    color: var(--text-faint);
+    font-size: 11px;
+    transition: color 150ms ease, transform 150ms ease;
+  }
+
+  .link-item:hover {
+    color: var(--gold);
+    background: var(--surface-2);
+  }
+
+  .link-item:hover .arrow {
+    color: var(--gold);
+    transform: translate(1px, -1px);
+  }
+
+  .status-panel {
+    padding: 18px 24px 26px;
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .status-panel .tree-label {
+    margin-bottom: 10px;
+  }
+
+  .panel-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    align-items: center;
+    gap: 12px;
+    font-size: 11.5px;
+  }
+
+  .k {
+    color: var(--text-faint);
+  }
+
+  .v {
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+    flex-shrink: 0;
+    animation: pulse 2.4s ease-out infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(90, 168, 157, 0.45);
+    }
+    70% {
+      box-shadow: 0 0 0 7px rgba(90, 168, 157, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(90, 168, 157, 0);
+    }
+  }
+
+  @media (max-width: 900px) {
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: var(--bg-raise);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 6px 16px;
+    }
+
+    .topbar .mark {
+      padding: 10px 0;
+    }
+
+    .menu-toggle {
+      background: none;
+      border: none;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+    .menu-toggle span {
+      width: 20px;
+      height: 1.5px;
+      background: var(--text-dim);
+    }
+
+    .sidebar {
+      transform: translateX(-100%);
+      transition: transform 220ms ease;
+      width: min(78vw, 300px);
+    }
+    .sidebar.open {
+      transform: translateX(0);
+    }
+
+    .mark--desktop {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const toggle = document.getElementById("menu-toggle");
+  const nav = document.getElementById("sidebar-nav");
+  toggle?.addEventListener("click", () => {
+    const open = nav?.classList.toggle("open");
+    toggle.setAttribute("aria-expanded", String(!!open));
+  });
+  nav?.querySelectorAll("a").forEach((a) =>
+    a.addEventListener("click", () => {
+      nav.classList.remove("open");
+      toggle?.setAttribute("aria-expanded", "false");
+    })
+  );
+
+  const SB_KEY = "portfolio:sb";
+  const root = document.documentElement;
+  const sbToggle = document.getElementById("sb-toggle");
+  const sbReopen = document.getElementById("sb-reopen");
+
+  const isClosed = () => root.classList.contains("sb-closed");
+
+  const syncSbAria = () => {
+    sbToggle?.setAttribute("aria-expanded", String(!isClosed()));
+    sbReopen?.setAttribute("aria-expanded", String(!isClosed()));
+  };
+
+  const setSidebar = (closed: boolean, persist = true) => {
+    root.classList.toggle("sb-closed", closed);
+    if (persist) {
+      try {
+        localStorage.setItem(SB_KEY, closed ? "closed" : "open");
+      } catch {}
+    }
+    syncSbAria();
+  };
+
+  sbToggle?.addEventListener("click", () => setSidebar(!isClosed()));
+  sbReopen?.addEventListener("click", () => setSidebar(false));
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !isClosed() && window.innerWidth > 900) setSidebar(true);
+  });
+  syncSbAria();
+
+  const sections = document.querySelectorAll("main section[id]");
+  const links = document.querySelectorAll<HTMLElement>(".tree-item");
+  const indicator = document.querySelector<HTMLElement>(".tree-indicator");
+
+  const placeIndicator = (link: HTMLElement | null) => {
+    if (!indicator || !link) return;
+    indicator.style.transform = `translateY(${link.offsetTop}px)`;
+    indicator.style.height = `${link.offsetHeight}px`;
+    indicator.style.opacity = "1";
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          links.forEach((l) => l.classList.remove("active"));
+          const match = document.querySelector<HTMLElement>(
+            `.tree-item[data-section="${entry.target.id}"]`
+          );
+          match?.classList.add("active");
+          placeIndicator(match);
+        }
+      });
+    },
+    { rootMargin: "-40% 0px -50% 0px" }
+  );
+  sections.forEach((s) => observer.observe(s));
+
+  window.addEventListener("resize", () => {
+    placeIndicator(document.querySelector<HTMLElement>(".tree-item.active"));
+  });
+
+  const clock = document.getElementById("ist-clock");
+  if (clock) {
+    const fmt = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Kolkata",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
+    const tick = () => {
+      clock.textContent = `${fmt.format(new Date())} IST`;
+    };
+    tick();
+    setInterval(tick, 1000);
+  }
+</script>
