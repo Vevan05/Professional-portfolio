@@ -16,7 +16,7 @@ export const profile = {
   resume: "/Vevan_O_Narain_Resume.pdf",
   stats: [
     { value: "9.44", label: "CGPA" },
-    { value: "200+", label: "LeetCode solved" },
+    { value: "250+", label: "LeetCode solved" },
     { value: "4", label: "systems shipped" },
   ],
 };
@@ -28,19 +28,37 @@ export type Project = {
   stack: string[];
   bullets: string[];
   href: string;
+  demo?: string;
   status: string;
+  featured?: boolean;
 };
 
 export const projects: Project[] = [
+  {
+    id: "hybrid-search-engine",
+    name: "Hybrid Search Engine with A/B Testing",
+    tagline: "HNSW, BM25, RRF, and int8 quantization",
+    stack: ["Python", "NumPy", "FastAPI", "React", "TypeScript", "ONNX"],
+    bullets: [
+      "Built hybrid search from scratch (HNSW, BM25, RRF, int8 quantization) without a vector DB: 1.00 Recall@10 on 16,770 chunks.",
+      "Fixed two silent bugs: int8 used 3 of 256 levels (cosine 0.71 → 0.9999) and an HNSW link cap reached 41 of 5,000 nodes.",
+      "A/B testing with SHA-256 bucketing, z-tests, Welch's t-tests, and SRM detection; 4.3% A/A false-positive rate.",
+      "FastAPI backend with SSE streaming, offline evaluation (recall, MRR, nDCG), React dashboard, and 36 pytest tests.",
+    ],
+    href: "https://github.com/Vevan05/Cairn",
+    demo: "https://cairn-ivory.vercel.app/",
+    status: "deployed",
+  },
   {
     id: "vync",
     name: "Vync",
     tagline: "Real-time collaborative code editor",
     stack: ["React", "Node.js", "Socket.IO", "Yjs", "PostgreSQL", "Redis", "Docker"],
     bullets: [
-      "Developed a Google Docs–style collaborative code editor using CRDTs (Yjs) to enable low-latency concurrent editing with conflict-free synchronization across distributed clients.",
-      "Engineered conflict-free state reconciliation ensuring consistency across concurrent edits without merge conflicts.",
-      "Sandboxed multi-language code execution in Docker containers with CPU and memory limits for secure, isolated execution.",
+      "Google Docs–style collaborative code editor using CRDTs (Yjs) for low-latency, conflict-free concurrent editing.",
+      "Verified convergence with a fuzz harness: 10,000 concurrent edits across 20 clients, with zero divergence.",
+      "Sandboxed 5 languages in Docker (128 MB memory, 0.5 CPU, network disabled), with containment tested against fork and memory bombs.",
+      "Measured p50 execution latency of 0.5–0.9 s (interpreted) and 1.4–4.9 s (compiled).",
     ],
     href: "https://github.com/Vevan05/Vync",
     status: "shipped",
@@ -51,11 +69,25 @@ export const projects: Project[] = [
     tagline: "SEC filing RAG system",
     stack: ["Python", "ChromaDB", "Sentence Transformers", "BM25", "Groq", "BS4"],
     bullets: [
-      "Built an end-to-end Retrieval-Augmented Generation (RAG) system for querying SEC 10-K/10-Q filings, with citation-grounded answers and explicit refusal handling for out-of-corpus queries.",
-      "Engineered a four-channel hybrid retrieval pipeline combining dense retrieval, BM25, table-specific retrieval, Reciprocal Rank Fusion (RRF), and windowed cross-encoder reranking with type-balanced final selection.",
-      "Developed table-aware, section-aware document processing with token-overlap chunking and metadata filtering, achieving 0.900 MRR, 94% Hit@5, and 100% citation validity on an 18-question evaluation set.",
+      "End-to-end RAG system over SEC 10-K/10-Q filings with citation-grounded answers and refusal for out-of-corpus queries.",
+      "Four-channel hybrid retrieval (dense, BM25, table-specific) fused with RRF and cross-encoder reranking.",
+      "Table- and section-aware chunking: 0.933 MRR, 93% Hit@5, and 100% citation validity on a 60-question eval set.",
     ],
     href: "https://github.com/vevan05/10Kwery",
+    status: "shipped",
+  },
+  {
+    id: "harvest-hub",
+    name: "Harvest Hub — Smart Crop Yield Prediction Platform",
+    tagline: "Full-stack crop yield prediction platform",
+    stack: ["Python", "Flask", "Scikit-learn", "React", "Vite", "JavaScript", "WeatherAPI", "Google Gemini API"],
+    bullets: [
+      "Full-stack crop yield platform with an ML model that predicts yields from crop, season, soil, and nutrient inputs.",
+      "Geolocation and WeatherAPI supply location-specific temperature and rainfall for context-aware predictions.",
+      "Google Gemini API generates localized, multilingual farming advice from crop and soil conditions.",
+      "React dashboard on a Flask REST API connects inputs, model inference, weather, and AI recommendations.",
+    ],
+    href: "https://github.com/Vevan05/harvest-hub",
     status: "shipped",
   },
   {
@@ -64,11 +96,11 @@ export const projects: Project[] = [
     tagline: "Transfer-learning classifier, 38 disease classes",
     stack: ["Python", "TensorFlow", "Keras", "ResNet50", "Streamlit", "Scikit-learn"],
     bullets: [
-      "Fine-tuned ResNet50 using transfer learning on a dataset of over 50,000 plant leaf images, achieving 98.75% accuracy across 38 disease classes.",
-      "Deployed a Streamlit application for real-time image upload and disease classification with prediction confidence scores.",
+      "Fine-tuned ResNet50 via transfer learning on 50,000+ plant leaf images, reaching 98.75% accuracy across 38 disease classes.",
+      "Deployed a Streamlit app for real-time image upload with disease predictions and confidence scores.",
     ],
     href: "https://github.com/Vevan05/Plant-Leaf-Disease-Detection",
-    status: "deployed",
+    status: "shipped",
   },
   {
     id: "emotion-detector",
@@ -76,11 +108,26 @@ export const projects: Project[] = [
     tagline: "Live facial emotion recognition",
     stack: ["Python", "TensorFlow/Keras", "OpenCV", "CNN", "NumPy"],
     bullets: [
-      "Built a real-time facial emotion recognition system using OpenCV and a CNN trained on the FER-2013 dataset containing over 30,000 facial images.",
-      "Classified seven facial emotions from live webcam input and applied image preprocessing and data augmentation to improve robustness across varying lighting and pose conditions.",
+      "Real-time facial emotion recognition with OpenCV and a CNN trained on FER-2013 (30,000+ images).",
+      "Classifies seven emotions from live webcam input, with preprocessing and augmentation for varied lighting and pose.",
     ],
     href: "https://github.com/Vevan05/Real-Time-Emotion-Detector",
     status: "shipped",
+  },
+  {
+    id: "machine-learning-repo",
+    name: "Machine Learning Repository",
+    tagline: "Hands-on ML learning repository from Udemy course",
+    stack: ["Python", "NumPy", "Pandas", "Scikit-learn", "TensorFlow", "NLTK", "Matplotlib"],
+    bullets: [
+      "Hands-on repo covering 40+ ML topics from the Udemy 'Machine Learning A-Z' course, from regression to deep learning.",
+      "Per-topic Python scripts and Jupyter notebooks with datasets, spanning clustering, association rules, RL, NLP, and RNNs.",
+      "Includes dimensionality reduction (PCA, LDA, Kernel PCA) and gradient boosting (XGBoost, CatBoost, LightGBM).",
+      "Each topic folder contains .ipynb notebooks and a data.csv for hands-on practice.",
+    ],
+    href: "https://github.com/Vevan05/Machine-Learning",
+    status: "tutorial",
+    featured: true,
   },
 ];
 
